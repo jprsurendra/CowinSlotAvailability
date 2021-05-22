@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cowin Slot Availability (Jaipur 18+)</title>
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.24/css/dataTables.jqueryui.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/scroller/2.0.3/css/scroller.jqueryui.min.css" rel="stylesheet" />
+</head>
+<body>
+    <h2>Cowin Slot Availability (Jaipur 18+)</h2>
+    <table id="example" class="display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Age</th>
+                <th>Available Capacity</th>
+                <th>Vaccine Name</th>
+                <th>Center Name</th>
+                <th>Center Address</th>
+                <th>Status On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for slot in slots %}
+                <tr>
+                    <td>{{ slot.date }}</td>
+                    <td>{{ slot.fee_type }}</td>
+                    <td>{{ slot.min_age_limit }}+</td>
+                    <td>{{ slot.available_capacity }}</td>
+                    <td>{{ slot.vaccine }}</td>
+                    <td>{{ slot.center_name }}</td>
+                    <td>{{ slot.center_address }}</td>
+                    <td>{{ slot.created_on }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.jqueryui.min.js"></script>
+<script src="https://cdn.datatables.net/scroller/2.0.3/js/dataTables.scroller.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable( {
+            scrollY:        1000,
+            scrollCollapse: true,
+            scroller:       true
+        } );
+    } );
+</script>
+</html>

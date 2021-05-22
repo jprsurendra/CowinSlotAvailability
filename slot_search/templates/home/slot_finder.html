@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery Get demo</title>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+ 
+	<form id="searchForm">
+	  District: <input type="text" name="chk_district" id="chk_district" value="506" placeholder="Enter district id"><br/><br/>
+	  Date(DD-MM-YYYY): <input type="text" name="chk_date"  id="chk_date" value="22-05-2021"  placeholder="Enter date"><br/><br/>
+	  <input type="submit" value="Search">
+	</form>
+	
+	<div class="container pt-4">
+		<div class="table-responsive">
+		  <table class="table table-bordered">
+			<thead>
+			  <tr>
+				<th class="text-center">Search datetime</th>
+				<th class="text-center">Center Info</th>
+				<th class="text-center">Session Info</th>
+			  </tr>
+			</thead>
+			<tbody id="tbody">
+
+			</tbody>
+		  </table>
+		</div>
+  </div>
+	Last Search: <span id='last_search'></span>
+	
+<!-- the result of the search will be rendered inside this div -->
+<div id="result"></div>
+ 
+<script>
+// Attach a submit handler to the form
+$( "#searchForm" ).submit(function( event ) {
+ 
+  // Stop form from submitting normally
+  event.preventDefault();
+ 
+  // Get some values from elements on the page:
+  	let $form = $( this );
+    let chk_district = $form.find( "input[name='chk_district']" ).val();
+	let chk_date = $form.find( "input[name='chk_date']" ).val(); 
+	let url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id="+chk_district+"&date="+chk_date+"";
+ 
+ 
+  //Ajax Function to send a get request
+  $.ajax({
+    method: 'GET',
+	url: url,
+	async:false,
+	success: function(data){
+		var currentdate = new Date();
+		var datetime = currentdate.getDate() + "/"+(currentdate.getMonth()+1) + "/" + currentdate.getFullYear() + "  " + currentdate.getHours() + ":"  + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+		$('#last_search').text(datetime);
+		
+	//if request if made successfully then the response represent the data
+
+		$.each(data.centers, function( index, center ) {
+			var row_html = '';
+			let is_available = false;
+			let session_data = []; 
+			console.log(center);
+			$.each(center.sessions, function( session_index, session ) {
+				console.log(session);
+				if(session.available_capacity>0 && min_age_limit == 18){
+					is_available = true;
+					session_data.push({
+						'vaccine_name' : session.vaccine,
+						'available_capacity' : session.available_capacity,
+						'available_capacity_dose1' : session.available_capacity_dose1,
+						'available_capacity_dose2' : session.available_capacity_dose2
+					});
+				}				
+			});	
+			
+			if(is_available){
+				// Adding a row inside the tbody.
+				row_html = row_html + '<tr id="row_'+ center.center_id + '">';
+				row_html = row_html + '<td>'+ datetime + '</td>';
+				row_html = row_html + '<td><table><tr><td>'+ center.name +'</td></tr>' +
+											     '<tr><td>'+ center.address + ' ' + center.block_name + ' ' + center.district_name + ' ' + center.pincode +'</td></tr></table></td>';
+				row_html = row_html + '<td><table>';
+				$.each(session_data, function( session_index, value ) {
+					row_html = row_html + '<tr><td>Vaccine Name:</td><td>'+ value.vaccine_name +'</td></tr>';
+					row_html = row_html + '<tr><td>Available Capacity:</td><td>'+ value.available_capacity + '('+ value.available_capacity_dose1+ ' + '+ value.available_capacity_dose2 +') </td></tr>';
+				});	
+				row_html = row_html + '</table></td>'; 
+				row_html = row_html + '</tr>';
+				$('#tbody').append(row_html); 
+			}
+			 
+		});		
+    }
+  });
+  
+});
+</script>
+ 
+</body>
+</html>

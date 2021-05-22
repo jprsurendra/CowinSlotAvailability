@@ -44,7 +44,7 @@ def do_empty(request):
 def do_start(request):
     try:
         from slot_search.CowinSlotAvailability import  CowinSlotAvailability
-        slot_finder = CowinSlotAvailability(chk_date="22-05-2021")  # chk_district=571
+        slot_finder = CowinSlotAvailability(chk_date="23-05-2021")  # chk_district=571
         slot_finder.do_start()
 
         html = "<html><body>work started ....</body></html>"

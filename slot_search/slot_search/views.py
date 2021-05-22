@@ -1,11 +1,21 @@
 from home.models import  District
+import threading
+
+
+class CowinSlotAvailabilityThread (threading.Thread):
+   def __init__(self):
+      threading.Thread.__init__(self)
+
+   def run(self):
+	   from slot_search.CowinSlotAvailability import  CowinSlotAvailability
+	   slot_finder = CowinSlotAvailability(chk_date="22-05-2021")  # chk_district=571
+	   slot_finder.do_start()
 
 
 def load_on_startup():
 	pass
-	from slot_search.CowinSlotAvailability import  CowinSlotAvailability
-	slot_finder = CowinSlotAvailability(chk_date = "22-05-2021") # chk_district=571
-	slot_finder.do_start()
+	# thread1 = CowinSlotAvailabilityThread()
+	# thread1.start()
 
 	# districts=[
 	# 	{

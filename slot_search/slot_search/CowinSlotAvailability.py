@@ -13,11 +13,7 @@ from home.models import  District,  Center, Slot
 class CowinSlotAvailability:
 
     def __init__(self, chk_district=506, min_age_limit = 18, chk_date = None):
-        try:
-            self.district = District.objects.get(id=chk_district)
-            self.chk_district = chk_district
-        except District.DoesNotExist:
-            self.chk_district = None
+        self.chk_district = chk_district
         self.min_age_limit = min_age_limit if min_age_limit==18 or min_age_limit==45 else 18
         if chk_date:
             self.chk_date = chk_date
@@ -62,6 +58,12 @@ class CowinSlotAvailability:
           datetime.datetime.strptime(self.chk_date, format)
         except:
           raise ValueError("Incorrect date format, should be DD-MM-YYYY")
+
+        try:
+            self.district = District.objects.get(id=self.chk_district)
+        except District.DoesNotExist:
+            raise ValueError("Incorrect district")
+
         print("===============================================================================")
         now = datetime.datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
